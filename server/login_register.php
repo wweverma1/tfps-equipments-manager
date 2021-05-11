@@ -1,7 +1,8 @@
 <?php 
 	include('config.php');
 	$conn = mysqli_connect($host, $username, $password, $database);
-	/*
+	//uncomment the code below for enabling php mailer
+	/* 
 	use PHPMailer\PHPMailer\PHPMailer;
 	use PHPMailer\PHPMailer\Exception;
 	require $_SERVER['DOCUMENT_ROOT'] . '/server/phpMailer/Exception.php';
@@ -66,7 +67,8 @@
   			$query1 = "INSERT INTO otp (otp, member_id) VALUES('$otp', '$reg_user_id')";
 			mysqli_query($conn, $query1);
 			$otp_id = mysqli_insert_id($conn); 
-
+			
+			//uncomment the code below for enabling php mailer
 			/*
 				$mail = new PHPMailer;
 				$mail->isSMTP(); 
