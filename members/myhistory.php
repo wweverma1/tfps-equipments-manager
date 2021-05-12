@@ -7,6 +7,11 @@
 		$_SESSION['message'] = "You must log in first";
 		header('location: login.php');
 	}
+  else if($_SESSION['user']['profile_completed']!='1')
+    {
+      $_SESSION['message'] = "You must complete your profile";
+      header('location: complete_profile.php');
+    }
 ?>
 <html>
 <head>
@@ -35,11 +40,9 @@
 		  <thead>
 		    <tr>
 		      <th>Date</th>
-          <th>Type</th>
 		      <th>Equipment Name</th>
           <th>Category</th>
-		      <th>Borrowed From</th>
-          <th>Returned To</th>
+          <th>Summary</th>
 		      <th>Remarks</th>
 		    </tr>
 		  </thead>
@@ -57,36 +60,44 @@
       		</td>
           <td>
             <?php 
-              if($row["giver_id"]==$uid)
-                echo "Return";
-              else
-                echo "Borrow";
+              echo $row["equipment_name"];
             ?>
           </td>
-		      <td>
-		      	<?php 
-		      		echo $row["equipment_name"];
-		      	?>
-		      </td>
 		      <td><?php echo $row["category_name"]; ?></td>
-		      <td>
-            <?php  
-              if($row["taker_id"]==$uid)
-                echo $row["giver_name"];
-              else
-                echo "-";
-            ?>
-          </td>
           <td>
             <?php
-              if($row["giver_id"]==$uid)
-                echo $row["taker_name"];
+              if($row["taker_id"]==$uid)
+              {
+                if($row["owner_id"]==$uid) 
+                {
+                  echo "You took back your equipment from ".$row["giver_name"];
+                }
+                else
+                {
+                  if($row["giver_id"]==$row["owner_id"])
+                  { 
+                    echo "You borrowed ".$row["owner_name"]."'s equipment from him.";
+                  }
+                  else
+                  {
+                    echo "You borrowed ".$row["owner_name"]."'s equipment from ".$row["giver_name"].".";
+                  }
+                }
+              }
               else
-                echo "-";
+              {
+                if($row["owner_id"]==$uid)
+                {
+                  echo "You gave your equipment to ".$row["taker_name"].".";
+                }
+                else
+                {
+                  echo "You gave ".$row["owner_name"]."'s equipment to ".$row["taker_name"].".";
+                }
+              }
             ?>
           </td>
 		      <td><?php if(is_null($row["remark"])=='1'){ echo "NA"; } else { echo $row["remark"]; } ?></td>
-
 		    </tr>
 		    <?php } ?>
 		  </tbody>

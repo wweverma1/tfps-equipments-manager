@@ -19,6 +19,7 @@
 
 <body>
 	<h1 style="font-weight:bold;">Admin Panel | TFPS Equipments Manager</h1>
+	
 	<h3>Update your profile</h3>
 	
 	<form method="post" action="profile.php">

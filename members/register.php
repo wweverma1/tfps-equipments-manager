@@ -1,5 +1,5 @@
 <?php 
-  include ('../server/login_register.php') 
+  include ('../server/login_register_reset.php') 
 ?>
 
 

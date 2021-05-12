@@ -8,6 +8,11 @@
 		$_SESSION['message'] = "You must log in first";
 		header('location: login.php');
 	}
+	else if($_SESSION['user']['profile_completed']!='1')
+  	{
+	    $_SESSION['message'] = "You must complete your profile";
+	    header('location: complete_profile.php');
+  	}
 	$eID = $_REQUEST['eID'];
 	$uid = $_SESSION['user']['id'];
     $query = "SELECT * FROM equipments WHERE id='$eID' LIMIT 1";
@@ -69,63 +74,69 @@
 
  	<?php 
         $q = "SELECT * FROM borrow_history WHERE equipment_id='$eID' ORDER BY id asc";
-  		$result = mysqli_query($conn,$q);
+  		$result1 = mysqli_query($conn,$q);
   	?>
 
-  	<?php if (mysqli_num_rows($result) !='0') : ?>
+  	<?php if (mysqli_num_rows($result1) !='0') : ?>
 
  	<table>
 		<thead>
 		  <tr>
 		  <th>Date</th>
-		  <th>Type</th>
-		  <th>Given By</th>
-		  <th>Given To</th>
+		  <th>Transaction Type</th>
+		  <th>Transaction Summary</th>
 		  <th>Remark (If any)</th>
       	  </tr>
 		</thead>
 		<tbody>
 		      <?php
-		      while($row = mysqli_fetch_assoc($result)) { ?>
+		      while($row1 = mysqli_fetch_assoc($result1)) { ?>
 		      
 		      <tr>
 		      <td>
 		      	<?php 
-			      		$dt = new DateTime($row["dated"]);
+			      		$dt = new DateTime($row1["dated"]);
 	      				$date = $dt->format('d-m-Y');
 	      				echo $date; 
 	      		?>
       		  </td>
+      		  <td>
+		      	<?php 
+     				if($row1["taker_id"]==$row["owner_id"])
+     				{
+     					echo "Return";
+     				}
+     				else
+     				{
+     					echo "Borrow";
+     				}
+      			?>
+      		  </td>
 		      <td>
 		      	<?php 
-     				if($row["owner_id"]==$row["taker_id"])
-     					echo "Return";
+     				if($row1["taker_id"]==$row["owner_id"])
+     				{
+     					echo $row["owner_name"]." took back his equipment from ".$row1["giver_name"].".";
+     				}
      				else
-     					echo "Borrow";
+     				{
+     					if($row1["giver_id"]==$row["owner_id"])
+     					{
+     						echo $row1["taker_name"]." took equipment from its owner ".$row["owner_name"].".";
+     					}
+     					else
+     					{
+     						echo $row1["taker_name"]." took ".$row["owner_name"]."'s equipment from ".$row1["giver_name"].".";
+     					}
+     				}
       			?>
       		  </td>
       		  <td>
 		      	<?php 
-		      		if($row["giver_id"]==$uid)
-		      			echo "You";
-		      		else 
-      					echo $row["giver_name"]; 
-      			?>
-      		  </td>
-      		  <td>
-		      	<?php 
-		      		if($row["taker_id"]==$uid)
-		      			echo "You";
-		      		else 
-      					echo $row["taker_name"]; 
-      			?>
-      		  </td>
-      		  <td>
-		      	<?php 
-      				if(is_null($row["remark"])=='1')
+      				if(is_null($row1["remark"])=='1')
       					echo "NA";
       				else
-      					echo $row["remark"];
+      					echo $row1["remark"];
       			?>
       		  </td>
 		      </tr>
@@ -135,7 +146,7 @@
 
 	<?php endif ?>
 
-  	<?php if (mysqli_num_rows($result) =='0') : ?>
+  	<?php if (mysqli_num_rows($result1) =='0') : ?>
   		<h4>No borrow history.</h4>
   	<?php endif ?>
 

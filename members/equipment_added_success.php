@@ -8,6 +8,11 @@
 		$_SESSION['message'] = "You must log in first";
 		header('location: login.php');
 	}
+	else if($_SESSION['user']['profile_completed']!='1')
+  	{
+	    $_SESSION['message'] = "You must complete your profile";
+	    header('location: complete_profile.php');
+  	}
 	$eID = $_REQUEST['eID'];
 	$uid = $_SESSION['user']['id'];
     $query = "SELECT * FROM equipments WHERE id='$eID' AND owner_id='$uid' LIMIT 1";

@@ -37,8 +37,8 @@ if (isset($_POST['take']))
 
 			if($taker_id==$owner_id)
 			{
-				$notification_owner = "Your Equipment ".$eName." has been returned by ".$giver_name.".";
-				$notification_lender = "You have returned ".$eName." to ".$taker_name.".";
+				$notification_owner = "Your equipment ".$eName." has been returned by ".$giver_name.".";
+				$notification_lender = "You have returned ".$eName." to its owner ".$taker_name.".";
 				$q3 = "INSERT INTO notification (notification, rid, dated) VALUES ('$notification_owner', '$owner_id', '$dated')";
 				mysqli_query($conn, $q3);
 				$q4 = "INSERT INTO notification (notification, rid, dated) VALUES ('$notification_lender', '$giver_id', '$dated')";
@@ -47,17 +47,17 @@ if (isset($_POST['take']))
 			else if($giver_id==$owner_id)
 			{
 				$notification_lender = "You have lent ".$eName." to ".$taker_name.".";
-				$notification_borrower = "You have borrowed ".$eName." from ".$giver_name.".";
-				$q4 = "INSERT INTO notification (notification, rid, dated) VALUES ('$notification_lender', '$giver_id', '$dated')";
+				$notification_borrower = "You have borrowed ".$giver_name."'s ".$eName." from ".$giver_name.".";
+				$q3 = "INSERT INTO notification (notification, rid, dated) VALUES ('$notification_lender', '$giver_id', '$dated')";
+				mysqli_query($conn, $q3);
+				$q4 = "INSERT INTO notification (notification, rid, dated) VALUES ('$notification_borrower', '$taker_id', '$dated')";
 				mysqli_query($conn, $q4);
-				$q5 = "INSERT INTO notification (notification, rid, dated) VALUES ('$notification_borrower', '$taker_id', '$dated')";
-				mysqli_query($conn, $q5);
 			}
 			else
 			{
-				$notification_owner = "Your Equipment ".$eName." has been borrowed by ".$taker_name." from ".$giver_name.".";
-				$notification_lender = "You have lent ".$eName." to ".$taker_name.".";
-				$notification_borrower = "You have borrowed ".$eName." from ".$giver_name.".";
+				$notification_owner = "Your Equipment ".$eName." has been given to ".$taker_name." from ".$giver_name.".";
+				$notification_lender = "You have given ".$owner_name."'s ".$eName." to ".$taker_name.".";
+				$notification_borrower = "You have borrowed ".$owner_name."'s ".$eName." from ".$giver_name.".";
 				$q3 = "INSERT INTO notification (notification, rid, dated) VALUES ('$notification_owner', '$owner_id', '$dated')";
 				mysqli_query($conn, $q3);
 				$q4 = "INSERT INTO notification (notification, rid, dated) VALUES ('$notification_lender', '$giver_id', '$dated')";

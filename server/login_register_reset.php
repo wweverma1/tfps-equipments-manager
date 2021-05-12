@@ -1,8 +1,7 @@
 <?php 
 	include('config.php');
 	$conn = mysqli_connect($host, $username, $password, $database);
-	//uncomment the code below for enabling php mailer
-	/* 
+	/*
 	use PHPMailer\PHPMailer\PHPMailer;
 	use PHPMailer\PHPMailer\Exception;
 	require $_SERVER['DOCUMENT_ROOT'] . '/server/phpMailer/Exception.php';
@@ -67,8 +66,7 @@
   			$query1 = "INSERT INTO otp (otp, member_id) VALUES('$otp', '$reg_user_id')";
 			mysqli_query($conn, $query1);
 			$otp_id = mysqli_insert_id($conn); 
-			
-			//uncomment the code below for enabling php mailer
+
 			/*
 				$mail = new PHPMailer;
 				$mail->isSMTP(); 
@@ -97,7 +95,7 @@
 			$_SESSION['user'] = GetTempMemberById($reg_user_id); 
 			$_SESSION['message'] = "Verify yout account";
 			
-			header('location: verify_otp.php?otpID='.$otp_id);
+			header('location: verify_otp.php?otpID='.$otp_id.'&route=1');
 
 		}
 	}
@@ -135,6 +133,77 @@
 			}
 		}
 	}
+
+
+	if (isset($_POST['reset'])) 
+	{
+		include('mailer_config.php');
+		$errors = array(); 
+		$username_email = esc($_POST['username_email']);
+
+		if (empty($username_email)) {  array_push($errors, "Enter your Username or Email Address."); }
+
+		if (empty($errors)) 
+		{
+			$user_check_query = "SELECT * FROM members WHERE username='$username_email' OR email='$username_email' LIMIT 1";
+			$result = mysqli_query($conn, $user_check_query);
+
+			if (mysqli_num_rows($result) > '0') 
+			{
+				$user = mysqli_fetch_assoc($result);
+				$myDate= date('Y-m-d');
+
+				$generator = "1357902468"; 
+				$otp = ""; 
+				for ($i = '1'; $i <= '5'; $i++) 
+				{ 
+	        		$otp .= substr($generator, (rand()%(strlen($generator))), '1'); 
+	  			}
+	  			$query1 = "INSERT INTO otp (otp, member_id) VALUES('$otp', '$user["id"]')";
+				mysqli_query($conn, $query1);
+				$otp_id = mysqli_insert_id($conn); 
+
+				/*
+					$mail = new PHPMailer;
+					$mail->isSMTP(); 
+					$mail->SMTPDebug = 0;
+					$mail->Host = "smtp.gmail.com"; 
+					$mail->Port = 587; 
+					$mail->SMTPSecure = 'tls'; 
+					$mail->SMTPAuth = true;
+					$mail->Username = $mailer_username; 
+					$mail->Password = $mailer_password; 
+					$mail->setFrom('system@tfps.com', 'TFPS'); 
+					$mail->addAddress($user["email"], $user["username"]);
+					$mail->Subject = 'Reset your password';
+					$mail->msgHTML("Hi ".$user["name"].", your OTP to reset your password is :<br>&nbsp;<b>".$otp."</b><br>Thank You,<br>TFPS Admin<br><b>TFPS, IIT KGP</b>");
+					$mail->AltBody = 'HTML Texts Not Supported'; 
+					$mail->SMTPOptions = array(
+					                    'ssl' => array(
+					                        'verify_peer' => false,
+					                        'verify_peer_name' => false,
+					                        'allow_self_signed' => true
+					                    )
+					                );
+	                $mail->send();
+	            */
+	            session_start();
+				$_SESSION['reset_userid'] = $user["id"]; 
+				$_SESSION['message'] = "Verify yout account";
+				
+				header('location: verify_otp.php?otpID='.$otp_id.'&route=2');
+			}
+			else 
+			{
+				array_push($errors, 'No account linked with this Username/Email.');
+			}
+
+		}
+
+	}
+
+
+
 
 	function esc(String $value)
 	{	

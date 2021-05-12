@@ -6,6 +6,11 @@
         $_SESSION['message'] = "You must log in first";
         header('location: login.php');
     }
+    else if($_SESSION['user']['profile_completed']!='1')
+    {
+        $_SESSION['message'] = "You must complete your profile";
+        header('location: complete_profile.php');
+    }
 ?>
 <title>Success | TFPS</title>	
 </head>

@@ -8,6 +8,11 @@
 		$_SESSION['message'] = "You must log in first";
 		header('location: login.php');
 	}
+  else if($_SESSION['user']['profile_completed']!='1')
+  {
+    $_SESSION['message'] = "You must complete your profile";
+    header('location: complete_profile.php');
+  }
 	$uid = $_SESSION['user']['id'];
 	$query = "SELECT * FROM notification WHERE rid='$uid'";
   $result = mysqli_query($conn, $query);

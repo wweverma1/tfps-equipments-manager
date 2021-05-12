@@ -1,5 +1,5 @@
 <?php 
-  include('../server/login_register.php'); 
+  include('../server/login_register_reset.php'); 
 ?>
 
 <!DOCTYPE html>
@@ -19,6 +19,7 @@
   	<input type="password" name="password" placeholder = "Password">
   	<button type="submit" class="btn" name="login_user">Sign in</button>
     <h4>Not a member yet? <a href="register.php">Register</a> right now</h4>
+    <h4>Forgot your password? <a href="reset_password.php">Reset it</a></h4>
 	</form>
 
 </body>

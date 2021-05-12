@@ -9,7 +9,11 @@
 	{
 	    header('location: login.php');
 	}
-
+	else if($_SESSION['user']['profile_completed']!='1')
+  	{
+	    $_SESSION['message'] = "You must complete your profile";
+	    header('location: complete_profile.php');
+  	}
 	$back = $_REQUEST['route'];
 ?>
 
